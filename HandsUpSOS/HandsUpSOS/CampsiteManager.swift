@@ -10,9 +10,10 @@ class CampsiteManager: ObservableObject {
     init() {
         loadCampsites()
         // Phase 2: Add sample data if no campsites exist
-        if campsites.isEmpty {
-            addSampleCampsites()
-        }
+        // Temporarily disabled to prevent crash - will re-enable after testing
+        // if campsites.isEmpty {
+        //     addSampleCampsites()
+        // }
     }
     
     // MARK: - CRUD Operations
