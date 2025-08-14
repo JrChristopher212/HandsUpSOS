@@ -1,8 +1,23 @@
 import SwiftUI
+import MessageUI
 
 struct SettingsView: View {
     @ObservedObject var locationHelper: LocationHelper
     @ObservedObject var contactHelper: ContactHelper
+    @State private var showingContactSheet = false
+    
+    // SMS capability logic
+    var canSendSMS: Bool {
+        #if targetEnvironment(simulator)
+        return true // Override for simulator testing
+        #else
+        return MFMessageComposeViewController.canSendText()
+        #endif
+    }
+    
+    var canSendSMSText: String {
+        canSendSMS ? "Ready to send messages" : "SMS not available"
+    }
     
     var body: some View {
         NavigationStack {
@@ -20,6 +35,26 @@ struct SettingsView: View {
                         content: locationHelper.locationText,
                         isGood: locationHelper.hasPermission && locationHelper.currentLocation != nil
                     )
+                    
+                    StatusCard(
+                        title: "Emergency Contacts",
+                        content: "\(contactHelper.contacts.count) contacts saved",
+                        isGood: !contactHelper.contacts.isEmpty
+                    )
+                    
+                    StatusCard(
+                        title: "SMS Capability",
+                        content: canSendSMSText,
+                        isGood: canSendSMS
+                    )
+                }
+                
+                // Contact Management Section
+                VStack(spacing: 15) {
+                    Button("👥 Manage Emergency Contacts") {
+                        showingContactSheet = true
+                    }
+                    .buttonStyle(SecondaryButtonStyle())
                 }
                 
                 Spacer()
@@ -27,6 +62,9 @@ struct SettingsView: View {
             .padding()
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
+            .sheet(isPresented: $showingContactSheet) {
+                ContactManagementView(contactHelper: contactHelper)
+            }
         }
     }
 }

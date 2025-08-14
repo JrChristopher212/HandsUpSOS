@@ -40,40 +40,7 @@ struct ContentView: View {
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                 
-                // Status Section
-                VStack(spacing: 15) {
-                    // Emergency Contacts Status
-                    VStack(alignment: .leading, spacing: 5) {
-                        HStack {
-                            Text("Emergency Contacts")
-                                .font(.headline)
-                            Spacer()
-                            Text(!contactHelper.contacts.isEmpty ? "✅" : "⚠️")
-                        }
-                        Text("\(contactHelper.contacts.count) contacts saved")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                    .padding()
-                    .background(Color(.systemGray6))
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                    
-                    // SMS Capability Status
-                    VStack(alignment: .leading, spacing: 5) {
-                        HStack {
-                            Text("SMS Capability")
-                                .font(.headline)
-                            Spacer()
-                            Text(canSendSMS ? "✅" : "⚠️")
-                        }
-                        Text(canSendSMSText)
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                    .padding()
-                    .background(Color(.systemGray6))
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                }
+
                 
                 // Big Emergency Button
                 Button(action: {
@@ -133,11 +100,6 @@ struct ContentView: View {
                 
                 // Settings Section
                 VStack(spacing: 15) {
-                    Button("👥 Manage Emergency Contacts") {
-                        showingContactSheet = true
-                    }
-                    .buttonStyle(SecondaryButtonStyle())
-                    
                     TextField("Your name (for emergency services)", text: $userName)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding(.horizontal)
@@ -301,16 +263,7 @@ struct ContentView: View {
 
 
 
-struct SecondaryButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .padding()
-            .background(Color.blue)
-            .foregroundColor(.white)
-            .clipShape(RoundedRectangle(cornerRadius: 10))
-            .scaleEffect(configuration.isPressed ? 0.95 : 1.0)
-    }
-}
+
 
 struct SimulatorMessagePreview: View {
     let message: String
@@ -424,6 +377,18 @@ struct NearbyCampsiteRow: View {
         .padding()
         .background(Color(.systemGray6))
         .clipShape(RoundedRectangle(cornerRadius: 10))
+    }
+}
+
+// Helper Views
+struct SecondaryButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .padding()
+            .background(Color.blue)
+            .foregroundColor(.white)
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .scaleEffect(configuration.isPressed ? 0.95 : 1.0)
     }
 }
 
