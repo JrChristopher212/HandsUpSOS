@@ -181,9 +181,21 @@ struct CampsiteRowView: View {
                     Text(campsite.name)
                         .font(.headline)
                     
-                    Text(campsite.category.rawValue)
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+                    HStack {
+                        Text(campsite.category.rawValue)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        
+                        if !campsite.address.isEmpty {
+                            Text("•")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            Text(campsite.address)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                                .lineLimit(1)
+                        }
+                    }
                 }
                 
                 Spacer()
@@ -201,6 +213,46 @@ struct CampsiteRowView: View {
                         .font(.caption2)
                         .foregroundColor(.secondary)
                 }
+            }
+            
+            // Phase 2: Amenities display
+            if hasAnyAmenities {
+                HStack(spacing: 12) {
+                    ForEach(getAmenityIcons(), id: \.self) { icon in
+                        Text(icon)
+                            .font(.caption)
+                    }
+                }
+                .padding(.leading, 4)
+            }
+            
+            // Phase 2: Accessibility and emergency info
+            HStack {
+                if campsite.isAccessible {
+                    Text("♿ Accessible")
+                        .font(.caption2)
+                        .foregroundColor(.green)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 2)
+                        .background(Color.green.opacity(0.2))
+                        .cornerRadius(4)
+                }
+                
+                if campsite.emergencyContact != nil || campsite.nearestHospital != nil {
+                    Text("🚨 Emergency Info")
+                        .font(.caption2)
+                        .foregroundColor(.red)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 2)
+                        .background(Color.red.opacity(0.2))
+                        .cornerRadius(4)
+                }
+                
+                Spacer()
+                
+                Text("📶 \(campsite.cellReception.rawValue)")
+                    .font(.caption2)
+                    .foregroundColor(campsite.cellReception.color)
             }
             
             if !campsite.notes.isEmpty {
@@ -223,6 +275,26 @@ struct CampsiteRowView: View {
             }
         }
         .padding(.vertical, 4)
+    }
+    
+    // Helper computed properties
+    private var hasAnyAmenities: Bool {
+        campsite.hasWater || campsite.hasElectricity || campsite.hasToilets || 
+        campsite.hasShowers || campsite.hasFirePit || campsite.hasBBQ || campsite.hasParking
+    }
+    
+    private func getAmenityIcons() -> [String] {
+        var icons: [String] = []
+        
+        if campsite.hasWater { icons.append("💧") }
+        if campsite.hasElectricity { icons.append("⚡") }
+        if campsite.hasToilets { icons.append("🚽") }
+        if campsite.hasShowers { icons.append("🚿") }
+        if campsite.hasFirePit { icons.append("🔥") }
+        if campsite.hasBBQ { icons.append("🍖") }
+        if campsite.hasParking { icons.append("🅿️") }
+        
+        return icons
     }
 }
 
