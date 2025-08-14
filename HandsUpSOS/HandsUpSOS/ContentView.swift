@@ -9,8 +9,8 @@ import SwiftUI
 import MessageUI
 
 struct ContentView: View {
-    @StateObject private var locationHelper = LocationHelper()
-    @StateObject private var contactHelper = ContactHelper()
+    @ObservedObject var locationHelper: LocationHelper
+    @ObservedObject var contactHelper: ContactHelper
     
     @State private var showingContactSheet = false
     @State private var showingEmergencyOptions = false
@@ -359,5 +359,8 @@ struct SimulatorMessagePreview: View {
 }
 
 #Preview {
-    ContentView()
+    ContentView(
+        locationHelper: LocationHelper(),
+        contactHelper: ContactHelper()
+    )
 }

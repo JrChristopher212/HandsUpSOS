@@ -15,6 +15,11 @@
 		A1234567890123456789013E /* MessageComposeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1234567890123456789013F /* MessageComposeView.swift */; };
 		A1234567890123456789014A /* HandsUpSOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1234567890123456789014B /* HandsUpSOSApp.swift */; };
 		A1234567890123456789014G /* EmergencyTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1234567890123456789014H /* EmergencyTemplate.swift */; };
+		A1234567890123456789017E /* CampsiteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1234567890123456789017F /* CampsiteModel.swift */; };
+		A1234567890123456789018A /* CampsiteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1234567890123456789018B /* CampsiteManager.swift */; };
+		A1234567890123456789018C /* CampsiteMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1234567890123456789018D /* CampsiteMapView.swift */; };
+		A1234567890123456789018E /* CampsiteListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1234567890123456789018F /* CampsiteListView.swift */; };
+		A1234567890123456789019A /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1234567890123456789019B /* MainTabView.swift */; };
 
 /* End PBXBuildFile section */
 
@@ -29,6 +34,11 @@
 		A1234567890123456789014C /* HandsUpSOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HandsUpSOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1234567890123456789014D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A1234567890123456789014H /* EmergencyTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyTemplate.swift; sourceTree = "<group>"; };
+		A1234567890123456789017F /* CampsiteModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampsiteModel.swift; sourceTree = "<group>"; };
+		A1234567890123456789018B /* CampsiteManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampsiteManager.swift; sourceTree = "<group>"; };
+		A1234567890123456789018D /* CampsiteMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampsiteMapView.swift; sourceTree = "<group>"; };
+		A1234567890123456789018F /* CampsiteListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampsiteListView.swift; sourceTree = "<group>"; };
+		A1234567890123456789019B /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +63,11 @@
 				A1234567890123456789013D /* LocationHelper.swift */,
 				A1234567890123456789013F /* MessageComposeView.swift */,
 				A1234567890123456789014H /* EmergencyTemplate.swift */,
+				A1234567890123456789017F /* CampsiteModel.swift */,
+				A1234567890123456789018B /* CampsiteManager.swift */,
+				A1234567890123456789018D /* CampsiteMapView.swift */,
+				A1234567890123456789018F /* CampsiteListView.swift */,
+				A1234567890123456789019B /* MainTabView.swift */,
 				A1234567890123456789014D /* Info.plist */,
 			);
 			path = HandsUpSOS;
@@ -152,6 +167,11 @@
 				A1234567890123456789013C /* LocationHelper.swift in Sources */,
 				A1234567890123456789013E /* MessageComposeView.swift in Sources */,
 				A1234567890123456789014G /* EmergencyTemplate.swift in Sources */,
+				A1234567890123456789017E /* CampsiteModel.swift in Sources */,
+				A1234567890123456789018A /* CampsiteManager.swift in Sources */,
+				A1234567890123456789018C /* CampsiteMapView.swift in Sources */,
+				A1234567890123456789018E /* CampsiteListView.swift in Sources */,
+				A1234567890123456789019A /* MainTabView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

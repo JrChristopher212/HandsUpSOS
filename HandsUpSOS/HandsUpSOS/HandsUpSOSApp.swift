@@ -11,7 +11,7 @@ import SwiftUI
 struct HandsUpSOSApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainTabView()
         }
     }
 }
