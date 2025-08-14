@@ -26,7 +26,7 @@ struct ContentView: View {
     @State private var cachedCanSendSMS = false
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack(spacing: 25) {
                 
                 // App Title
@@ -135,8 +135,10 @@ struct ContentView: View {
         .sheet(isPresented: $showingContactSheet) {
             ContactManagementView(contactHelper: contactHelper)
         }
-        .actionSheet(isPresented: $showingEmergencyOptions) {
-            createEmergencyActionSheet()
+        .confirmationDialog("🚨 SELECT EMERGENCY TYPE", isPresented: $showingEmergencyOptions) {
+            createEmergencyButtons()
+        } message: {
+            Text("This will send SMS to all your emergency contacts")
         }
         .sheet(isPresented: $showingMessageComposer) {
             if canSendSMS {
@@ -210,24 +212,12 @@ struct ContentView: View {
         cachedCanSendSOS = !contactHelper.contacts.isEmpty && cachedCanSendSMS && locationHelper.hasPermission
     }
     
-    func createEmergencyActionSheet() -> ActionSheet {
-        var buttons: [ActionSheet.Button] = []
-        
-        // Add template buttons
-        for template in EmergencyTemplate.campingTemplates {
-            buttons.append(.destructive(Text("\(template.emoji) \(template.title)")) {
+    func createEmergencyButtons() -> some View {
+        ForEach(EmergencyTemplate.campingTemplates, id: \.title) { template in
+            Button("\(template.emoji) \(template.title)", role: .destructive) {
                 sendEmergencyMessage(template: template)
-            })
+            }
         }
-        
-        // Add cancel button
-        buttons.append(.cancel())
-        
-        return ActionSheet(
-            title: Text("🚨 SELECT EMERGENCY TYPE"),
-            message: Text("This will send SMS to all your emergency contacts"),
-            buttons: buttons
-        )
     }
     
     func sendEmergencyMessage(template: EmergencyTemplate) {
@@ -306,7 +296,7 @@ struct SimulatorMessagePreview: View {
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack(spacing: 20) {
                 Text("📱 SMS Preview (Simulator)")
                     .font(.title2)

@@ -13,7 +13,7 @@ struct ContactManagementView: View {
     @State private var isLoading = false
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 if isLoading {
                     VStack(spacing: 20) {
@@ -140,7 +140,7 @@ struct ContactManagementView: View {
         .onAppear {
             checkContactPermission()
         }
-        .onChange(of: contactHelper.errorMessage) { errorMessage in
+        .onChange(of: contactHelper.errorMessage) { _, errorMessage in
             if let errorMessage = errorMessage {
                 alertMessage = errorMessage
                 showingAlert = true

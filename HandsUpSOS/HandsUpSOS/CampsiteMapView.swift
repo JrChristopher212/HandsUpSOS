@@ -13,7 +13,7 @@ struct CampsiteMapView: View {
     @State private var selectedCategory: CampsiteCategory?
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ZStack {
                 Map(coordinateRegion: $region, annotationItems: campsiteManager.campsites) { campsite in
                     MapAnnotation(coordinate: campsite.location) {
@@ -117,7 +117,7 @@ struct AddCampsiteView: View {
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             Form {
                 Section("Campsite Details") {
                     TextField("Campsite Name", text: $name)
@@ -155,13 +155,17 @@ struct AddCampsiteView: View {
             }
             .navigationTitle("Add Campsite")
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(
-                leading: Button("Cancel") { dismiss() },
-                trailing: Button("Save") {
-                    saveCampsite()
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Cancel") { dismiss() }
                 }
-                .disabled(name.isEmpty)
-            )
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Save") {
+                        saveCampsite()
+                    }
+                    .disabled(name.isEmpty)
+                }
+            }
         }
     }
     

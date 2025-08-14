@@ -43,7 +43,7 @@ struct CampsiteListView: View {
     }
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 // Search and Filter Bar
                 VStack(spacing: 10) {
@@ -124,20 +124,19 @@ struct CampsiteListView: View {
             }
             .navigationTitle("My Campsites")
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(
-                trailing: Button(action: { showingSortOptions = true }) {
-                    Image(systemName: "arrow.up.arrow.down")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: { showingSortOptions = true }) {
+                        Image(systemName: "arrow.up.arrow.down")
+                    }
                 }
-            )
-            .actionSheet(isPresented: $showingSortOptions) {
-                ActionSheet(
-                    title: Text("Sort Campsites"),
-                    buttons: SortOption.allCases.map { option in
-                        .default(Text(option.rawValue)) {
-                            sortOption = option
-                        }
-                    } + [.cancel()]
-                )
+            }
+            .confirmationDialog("Sort Campsites", isPresented: $showingSortOptions) {
+                ForEach(SortOption.allCases, id: \.self) { option in
+                    Button(option.rawValue) {
+                        sortOption = option
+                    }
+                }
             }
         }
     }
