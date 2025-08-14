@@ -27,8 +27,7 @@ struct ContentView: View {
     @State private var cachedCanSendSMS = false
     
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 25) {
+        VStack(spacing: 25) {
                 
                 // App Title
                 Text("🚨 HandsUpSOS ")
@@ -125,10 +124,6 @@ struct ContentView: View {
                         .ignoresSafeArea()
                 }
             )
-            .navigationTitle("Emergency Helper")
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden(true)
-        }
         .sheet(isPresented: $showingContactSheet) {
             ContactManagementView(contactHelper: contactHelper)
         }
@@ -181,7 +176,7 @@ struct ContentView: View {
         .onChange(of: userName) { _, _ in
             saveUserName()
         }
-    }
+        }
     
     var canSendSMS: Bool {
         #if targetEnvironment(simulator)

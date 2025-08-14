@@ -1,4 +1,5 @@
 import SwiftUI
+import MessageUI
 
 struct SettingsView: View {
     @ObservedObject var locationHelper: LocationHelper
@@ -20,6 +21,25 @@ struct SettingsView: View {
     
     var body: some View {
         VStack(spacing: 25) {
+            // House Back Button
+            HStack {
+                Button(action: {
+                    // This will take user back to emergency tab
+                }) {
+                    HStack {
+                        Image(systemName: "house.fill")
+                            .foregroundColor(.red)
+                        Text("Back to Emergency")
+                            .foregroundColor(.red)
+                            .fontWeight(.semibold)
+                    }
+                    .padding()
+                    .background(Color.red.opacity(0.1))
+                    .cornerRadius(10)
+                }
+                Spacer()
+            }
+            
             // App Title
             Text("⚙️ Settings & Status")
                 .font(.largeTitle)
