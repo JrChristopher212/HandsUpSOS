@@ -72,39 +72,42 @@ class ContactHelper: ObservableObject {
             return
         }
         
-        isLoading = true
-        
-        let store = CNContactStore()
-        let request = CNContactFetchRequest(keysToFetch: [
-            CNContactGivenNameKey as CNKeyDescriptor,
-            CNContactFamilyNameKey as CNKeyDescriptor,
-            CNContactPhoneNumbersKey as CNKeyDescriptor,
-            CNContactIdentifierKey as CNKeyDescriptor
-        ])
-        
-        // Clear existing contacts before loading
         DispatchQueue.main.async {
+            self.isLoading = true
             self.contacts.removeAll()
         }
         
-        do {
-            try store.enumerateContacts(with: request) { contact, stop in
-                if identifiers.contains(contact.identifier) {
-                    DispatchQueue.main.async {
-                        self.contacts.append(contact)
+        // Move contact loading to background queue
+        DispatchQueue.global(qos: .userInitiated).async {
+            let store = CNContactStore()
+            let request = CNContactFetchRequest(keysToFetch: [
+                CNContactGivenNameKey as CNKeyDescriptor,
+                CNContactFamilyNameKey as CNKeyDescriptor,
+                CNContactPhoneNumbersKey as CNKeyDescriptor,
+                CNContactIdentifierKey as CNKeyDescriptor
+            ])
+            
+            var loadedContacts: [CNContact] = []
+            
+            do {
+                try store.enumerateContacts(with: request) { contact, stop in
+                    if identifiers.contains(contact.identifier) {
+                        loadedContacts.append(contact)
                     }
                 }
-            }
-            
-            DispatchQueue.main.async {
-                self.isLoading = false
-                print("Loaded \(self.contacts.count) emergency contacts")
-            }
-        } catch {
-            DispatchQueue.main.async {
-                self.isLoading = false
-                self.errorMessage = "Error loading contacts: \(error.localizedDescription)"
-                print("Error loading contacts: \(error)")
+                
+                // Update UI on main thread after loading is complete
+                DispatchQueue.main.async {
+                    self.contacts = loadedContacts
+                    self.isLoading = false
+                    print("Loaded \(self.contacts.count) emergency contacts")
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                    self.errorMessage = "Error loading contacts: \(error.localizedDescription)"
+                    print("Error loading contacts: \(error)")
+                }
             }
         }
     }

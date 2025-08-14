@@ -3,7 +3,7 @@ import CoreLocation
 import SwiftUI
 
 struct Campsite: Identifiable, Codable {
-    let id = UUID()
+    let id: UUID
     var name: String
     var location: CLLocationCoordinate2D
     var notes: String
@@ -36,6 +36,7 @@ struct Campsite: Identifiable, Codable {
     var seasonAvailability: [Season]
     
     init(name: String, location: CLLocationCoordinate2D, notes: String = "", category: CampsiteCategory = .bushCamping, rating: Int = 3) {
+        self.id = UUID()
         self.name = name
         self.location = location
         self.notes = notes
@@ -70,6 +71,7 @@ struct Campsite: Identifiable, Codable {
     
     // Convenience initializer for Phase 2 with all fields
     init(name: String, location: CLLocationCoordinate2D, address: String, category: CampsiteCategory, notes: String = "", rating: Int = 3, phoneNumber: String? = nil, website: String? = nil, cost: String? = nil, maxOccupancy: Int? = nil, hasWater: Bool = false, hasElectricity: Bool = false, hasToilets: Bool = false, hasShowers: Bool = false, hasFirePit: Bool = false, hasBBQ: Bool = false, hasParking: Bool = false, isAccessible: Bool = false, emergencyContact: String? = nil, nearestHospital: String? = nil, nearestPolice: String? = nil, cellReception: CellReceptionLevel = .unknown, accessibilityNotes: String = "", emergencyNotes: String = "", campingType: CampingType = .tent, seasonAvailability: [Season] = [.spring, .summer, .autumn, .winter]) {
+        self.id = UUID()
         self.name = name
         self.location = location
         self.address = address

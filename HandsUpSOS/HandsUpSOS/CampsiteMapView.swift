@@ -15,19 +15,21 @@ struct CampsiteMapView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Map(coordinateRegion: $region, annotationItems: campsiteManager.campsites) { campsite in
-                    MapAnnotation(coordinate: campsite.location) {
-                        CampsiteAnnotationView(campsite: campsite)
-                            .onTapGesture {
-                                // Handle tap on annotation
-                            }
+                Map(position: .constant(.region(region))) {
+                    ForEach(campsiteManager.campsites) { campsite in
+                        Annotation(campsite.name, coordinate: campsite.location) {
+                            CampsiteAnnotationView(campsite: campsite)
+                                .onTapGesture {
+                                    // Handle tap on annotation
+                                }
+                        }
                     }
                 }
                 .onTapGesture { location in
                     // Handle map tap to add pin
                     handleMapTap(at: location)
                 }
-                .ignoresSafeArea(edges: .bottom)
+                .ignoresSafeArea(edges: [.bottom])
                 
                 // Search and Filter Controls
                 VStack {

@@ -11,6 +11,7 @@ import MessageUI
 struct ContentView: View {
     @ObservedObject var locationHelper: LocationHelper
     @ObservedObject var contactHelper: ContactHelper
+    @ObservedObject var campsiteManager: CampsiteManager
     
     @State private var showingContactSheet = false
     @State private var showingEmergencyOptions = false
@@ -41,23 +42,37 @@ struct ContentView: View {
                 
                 // Status Section
                 VStack(spacing: 15) {
-                    StatusCard(
-                        title: "Location Status",
-                        content: locationHelper.locationText,
-                        isGood: locationHelper.hasPermission && locationHelper.currentLocation != nil
-                    )
+                    // Emergency Contacts Status
+                    VStack(alignment: .leading, spacing: 5) {
+                        HStack {
+                            Text("Emergency Contacts")
+                                .font(.headline)
+                            Spacer()
+                            Text(!contactHelper.contacts.isEmpty ? "✅" : "⚠️")
+                        }
+                        Text("\(contactHelper.contacts.count) contacts saved")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding()
+                    .background(Color(.systemGray6))
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
                     
-                    StatusCard(
-                        title: "Emergency Contacts",
-                        content: "\(contactHelper.contacts.count) contacts saved",
-                        isGood: !contactHelper.contacts.isEmpty
-                    )
-                    
-                    StatusCard(
-                        title: "SMS Capability",
-                        content: canSendSMSText,
-                        isGood: canSendSMS
-                    )
+                    // SMS Capability Status
+                    VStack(alignment: .leading, spacing: 5) {
+                        HStack {
+                            Text("SMS Capability")
+                                .font(.headline)
+                            Spacer()
+                            Text(canSendSMS ? "✅" : "⚠️")
+                        }
+                        Text(canSendSMSText)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding()
+                    .background(Color(.systemGray6))
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
                 
                 // Big Emergency Button
@@ -88,6 +103,30 @@ struct ContentView: View {
                         .font(.caption)
                         .foregroundColor(.orange)
                         .multilineTextAlignment(.center)
+                }
+                
+                // Nearby Campsites & Emergency Info Section
+                VStack(spacing: 15) {
+                    HStack {
+                        Text("🚨 Nearby Emergency Resources")
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                        Spacer()
+                    }
+                    
+                    if nearbyCampsites.isEmpty {
+                        Text("No campsites found within 50km")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color(.systemGray6))
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                    } else {
+                        ForEach(nearbyCampsites.prefix(3)) { campsite in
+                            NearbyCampsiteRow(campsite: campsite)
+                        }
+                    }
                 }
                 
                 Spacer()
@@ -202,6 +241,11 @@ struct ContentView: View {
         cachedCanSendSOS
     }
     
+    var nearbyCampsites: [Campsite] {
+        guard let currentLocation = locationHelper.currentLocation else { return [] }
+        return campsiteManager.getCampsitesNearby(coordinate: currentLocation.coordinate, radius: 50.0)
+    }
+    
     func handleEmergencyPressed() {
         locationHelper.getCurrentLocation()
         showingEmergencyOptions = true
@@ -255,29 +299,7 @@ struct ContentView: View {
     }
 }
 
-// Helper Views
-struct StatusCard: View {
-    let title: String
-    let content: String
-    let isGood: Bool
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 5) {
-            HStack {
-                Text(title)
-                    .font(.headline)
-                Spacer()
-                Text(isGood ? "✅" : "⚠️")
-            }
-            Text(content)
-                .font(.caption)
-                .foregroundColor(.secondary)
-        }
-        .padding()
-        .background(Color(.systemGray6))
-        .clipShape(RoundedRectangle(cornerRadius: 10))
-    }
-}
+
 
 struct SecondaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
@@ -348,9 +370,67 @@ struct SimulatorMessagePreview: View {
     }
 }
 
+struct NearbyCampsiteRow: View {
+    let campsite: Campsite
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text(campsite.category.icon)
+                    .font(.title2)
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(campsite.name)
+                        .font(.headline)
+                    
+                    Text(campsite.address)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .lineLimit(1)
+                }
+                
+                Spacer()
+                
+                VStack(alignment: .trailing, spacing: 2) {
+                    HStack(spacing: 2) {
+                        ForEach(1...5, id: \.self) { star in
+                            Image(systemName: star <= campsite.rating ? "star.fill" : "star")
+                                .font(.caption)
+                                .foregroundColor(.yellow)
+                        }
+                    }
+                    
+                    Text("📶 \(campsite.cellReception.rawValue)")
+                        .font(.caption2)
+                        .foregroundColor(campsite.cellReception.color)
+                }
+            }
+            
+            // Emergency info if available
+            if campsite.emergencyContact != nil || campsite.nearestHospital != nil {
+                HStack {
+                    Text("🚨 Emergency Info Available")
+                        .font(.caption2)
+                        .foregroundColor(.red)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 2)
+                        .background(Color.red.opacity(0.2))
+                        .cornerRadius(4)
+                    
+                    Spacer()
+                }
+            }
+        }
+        .padding()
+        .background(Color(.systemGray6))
+        .clipShape(RoundedRectangle(cornerRadius: 10))
+    }
+}
+
 #Preview {
     ContentView(
         locationHelper: LocationHelper(),
-        contactHelper: ContactHelper()
+        contactHelper: ContactHelper(),
+        campsiteManager: CampsiteManager()
     )
 }

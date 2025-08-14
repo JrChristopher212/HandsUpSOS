@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		94E6B6282E4E7BDD00CB15D5 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E6B6272E4E7BDD00CB15D5 /* SettingsView.swift */; };
+		94E6B62A2E4E7CE200CB15D5 /* CampsiteDataUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E6B6292E4E7CE200CB15D5 /* CampsiteDataUtilities.swift */; };
+		94E6B6462E4E85FC00CB15D5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 94E6B6452E4E85FC00CB15D5 /* Assets.xcassets */; };
 		A1234567890123456789012A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1234567890123456789012B /* ContentView.swift */; };
 		A1234567890123456789012C /* ContactHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1234567890123456789012D /* ContactHelper.swift */; };
 		A1234567890123456789012E /* ContactManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1234567890123456789012F /* ContactManagementView.swift */; };
@@ -20,10 +23,12 @@
 		A1234567890123456789018C /* CampsiteMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1234567890123456789018D /* CampsiteMapView.swift */; };
 		A1234567890123456789018E /* CampsiteListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1234567890123456789018F /* CampsiteListView.swift */; };
 		A1234567890123456789019A /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1234567890123456789019B /* MainTabView.swift */; };
-
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		94E6B6272E4E7BDD00CB15D5 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		94E6B6292E4E7CE200CB15D5 /* CampsiteDataUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampsiteDataUtilities.swift; sourceTree = "<group>"; };
+		94E6B6452E4E85FC00CB15D5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A1234567890123456789012B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A1234567890123456789012D /* ContactHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactHelper.swift; sourceTree = "<group>"; };
 		A1234567890123456789012F /* ContactManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactManagementView.swift; sourceTree = "<group>"; };
@@ -55,6 +60,8 @@
 		A1234567890123456789014F /* HandsUpSOS */ = {
 			isa = PBXGroup;
 			children = (
+				94E6B6292E4E7CE200CB15D5 /* CampsiteDataUtilities.swift */,
+				94E6B6272E4E7BDD00CB15D5 /* SettingsView.swift */,
 				A1234567890123456789014B /* HandsUpSOSApp.swift */,
 				A1234567890123456789012B /* ContentView.swift */,
 				A1234567890123456789012D /* ContactHelper.swift */,
@@ -69,6 +76,7 @@
 				A1234567890123456789018F /* CampsiteListView.swift */,
 				A1234567890123456789019B /* MainTabView.swift */,
 				A1234567890123456789014D /* Info.plist */,
+				94E6B6452E4E85FC00CB15D5 /* Assets.xcassets */,
 			);
 			path = HandsUpSOS;
 			sourceTree = "<group>";
@@ -149,6 +157,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				94E6B6462E4E85FC00CB15D5 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -165,7 +174,9 @@
 				A1234567890123456789012E /* ContactManagementView.swift in Sources */,
 				A1234567890123456789013A /* EmergencyMessageBuilder.swift in Sources */,
 				A1234567890123456789013C /* LocationHelper.swift in Sources */,
+				94E6B62A2E4E7CE200CB15D5 /* CampsiteDataUtilities.swift in Sources */,
 				A1234567890123456789013E /* MessageComposeView.swift in Sources */,
+				94E6B6282E4E7BDD00CB15D5 /* SettingsView.swift in Sources */,
 				A1234567890123456789014G /* EmergencyTemplate.swift in Sources */,
 				A1234567890123456789017E /* CampsiteModel.swift in Sources */,
 				A1234567890123456789018A /* CampsiteManager.swift in Sources */,
@@ -307,9 +318,9 @@
 				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app needs location access to send your location in emergency messages.";
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "This app needs location access to send your location in emergency messages.";
 				INFOPLIST_KEY_NSContactsUsageDescription = "This app needs access to your contacts to send emergency messages.";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "This app needs location access to send your location in emergency messages.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app needs location access to send your location in emergency messages.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -336,9 +347,9 @@
 				CODE_SIGN_STYLE = Automatic;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app needs location access to send your location in emergency messages.";
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "This app needs location access to send your location in emergency messages.";
 				INFOPLIST_KEY_NSContactsUsageDescription = "This app needs access to your contacts to send emergency messages.";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "This app needs location access to send your location in emergency messages.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app needs location access to send your location in emergency messages.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -360,6 +371,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		A1234567890123456789015D /* Build configuration list for PBXNativeTarget "HandsUpSOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1234567890123456789016E /* Debug */,
+				A1234567890123456789016F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		A1234567890123456789016B /* Build configuration list for PBXProject "HandsUpSOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -369,19 +389,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A1234567890123456789015D /* Build configuration list for PBXNativeTarget "HandsUpSOS" */ = {
-			isa = XCConfigurationList;
-			buildConfigurationList = A1234567890123456789016B /* Build configuration list for PBXProject "HandsUpSOS" */;
-			buildConfigurations = (
-				A1234567890123456789016E /* Debug */,
-				A1234567890123456789016F /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 /* End XCConfigurationList section */
-
-
 	};
 	rootObject = A1234567890123456789016A /* Project object */;
 }
