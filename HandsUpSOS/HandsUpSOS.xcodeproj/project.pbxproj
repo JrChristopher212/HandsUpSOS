@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		94B228632E4E99A30081C8F9 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B228622E4E99A30081C8F9 /* ProfileView.swift */; };
 		94E6B6282E4E7BDD00CB15D5 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E6B6272E4E7BDD00CB15D5 /* SettingsView.swift */; };
 		94E6B62A2E4E7CE200CB15D5 /* CampsiteDataUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E6B6292E4E7CE200CB15D5 /* CampsiteDataUtilities.swift */; };
 		94E6B6462E4E85FC00CB15D5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 94E6B6452E4E85FC00CB15D5 /* Assets.xcassets */; };
@@ -26,6 +27,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		94B228622E4E99A30081C8F9 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		94E6B6272E4E7BDD00CB15D5 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		94E6B6292E4E7CE200CB15D5 /* CampsiteDataUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampsiteDataUtilities.swift; sourceTree = "<group>"; };
 		94E6B6452E4E85FC00CB15D5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -60,6 +62,7 @@
 		A1234567890123456789014F /* HandsUpSOS */ = {
 			isa = PBXGroup;
 			children = (
+				94B228622E4E99A30081C8F9 /* ProfileView.swift */,
 				94E6B6292E4E7CE200CB15D5 /* CampsiteDataUtilities.swift */,
 				94E6B6272E4E7BDD00CB15D5 /* SettingsView.swift */,
 				A1234567890123456789014B /* HandsUpSOSApp.swift */,
@@ -176,6 +179,7 @@
 				A1234567890123456789013C /* LocationHelper.swift in Sources */,
 				94E6B62A2E4E7CE200CB15D5 /* CampsiteDataUtilities.swift in Sources */,
 				A1234567890123456789013E /* MessageComposeView.swift in Sources */,
+				94B228632E4E99A30081C8F9 /* ProfileView.swift in Sources */,
 				94E6B6282E4E7BDD00CB15D5 /* SettingsView.swift in Sources */,
 				A1234567890123456789014G /* EmergencyTemplate.swift in Sources */,
 				A1234567890123456789017E /* CampsiteModel.swift in Sources */,

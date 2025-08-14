@@ -1,5 +1,4 @@
 import SwiftUI
-import MessageUI
 
 struct SettingsView: View {
     @ObservedObject var locationHelper: LocationHelper
@@ -20,51 +19,47 @@ struct SettingsView: View {
     }
     
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 25) {
-                // App Title
-                Text("⚙️ Settings & Status")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .foregroundColor(.blue)
+        VStack(spacing: 25) {
+            // App Title
+            Text("⚙️ Settings & Status")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+                .foregroundColor(.blue)
+            
+            // Status Section
+            VStack(spacing: 15) {
+                StatusCard(
+                    title: "Location Status",
+                    content: locationHelper.locationText,
+                    isGood: locationHelper.hasPermission && locationHelper.currentLocation != nil
+                )
                 
-                // Status Section
-                VStack(spacing: 15) {
-                    StatusCard(
-                        title: "Location Status",
-                        content: locationHelper.locationText,
-                        isGood: locationHelper.hasPermission && locationHelper.currentLocation != nil
-                    )
-                    
-                    StatusCard(
-                        title: "Emergency Contacts",
-                        content: "\(contactHelper.contacts.count) contacts saved",
-                        isGood: !contactHelper.contacts.isEmpty
-                    )
-                    
-                    StatusCard(
-                        title: "SMS Capability",
-                        content: canSendSMSText,
-                        isGood: canSendSMS
-                    )
-                }
+                StatusCard(
+                    title: "Emergency Contacts",
+                    content: "\(contactHelper.contacts.count) contacts saved",
+                    isGood: !contactHelper.contacts.isEmpty
+                )
                 
-                // Contact Management Section
-                VStack(spacing: 15) {
-                    Button("👥 Manage Emergency Contacts") {
-                        showingContactSheet = true
-                    }
-                    .buttonStyle(SecondaryButtonStyle())
-                }
-                
-                Spacer()
+                StatusCard(
+                    title: "SMS Capability",
+                    content: canSendSMSText,
+                    isGood: canSendSMS
+                )
             }
-            .padding()
-            .navigationTitle("Settings")
-            .navigationBarTitleDisplayMode(.inline)
-            .sheet(isPresented: $showingContactSheet) {
-                ContactManagementView(contactHelper: contactHelper)
+            
+            // Contact Management Section
+            VStack(spacing: 15) {
+                Button("👥 Manage Emergency Contacts") {
+                    showingContactSheet = true
+                }
+                .buttonStyle(SecondaryButtonStyle())
             }
+            
+            Spacer()
+        }
+        .padding()
+        .sheet(isPresented: $showingContactSheet) {
+            ContactManagementView(contactHelper: contactHelper)
         }
     }
 }

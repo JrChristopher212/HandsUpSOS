@@ -34,6 +34,13 @@ struct MainTabView: View {
                     Image(systemName: "gear")
                     Text("Settings")
                 }
+            
+            // Profile Tab
+            ProfileView()
+                .tabItem {
+                    Image(systemName: "person.circle")
+                    Text("Profile")
+                }
         }
         .accentColor(.red) // Emergency theme color
     }

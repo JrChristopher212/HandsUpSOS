@@ -98,14 +98,9 @@ struct ContentView: View {
                 
                 Spacer()
                 
-                // Settings Section
-                VStack(spacing: 15) {
-                    TextField("Your name (for emergency services)", text: $userName)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .padding(.horizontal)
-                    
-                    // Copy Emergency Message Button
-                    if !emergencyMessage.isEmpty {
+                // Copy Emergency Message Button
+                if !emergencyMessage.isEmpty {
+                    VStack(spacing: 15) {
                         Button("📋 Copy Emergency Message") {
                             UIPasteboard.general.string = emergencyMessage
                             alertMessage = "Emergency message copied to clipboard!"
@@ -132,6 +127,7 @@ struct ContentView: View {
             )
             .navigationTitle("Emergency Helper")
             .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden(true)
         }
         .sheet(isPresented: $showingContactSheet) {
             ContactManagementView(contactHelper: contactHelper)
