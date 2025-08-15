@@ -19,10 +19,10 @@ struct ProfileView: View {
                 TextField("Your name (for emergency services)", text: $userName)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                 
-                TextField("Emergency contact name", text: $emergencyContactName)
+                TextField("Next of kin name", text: $emergencyContactName)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                 
-                TextField("Emergency contact phone", text: $emergencyContactPhone)
+                TextField("Next of kin contact phone", text: $emergencyContactPhone)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .keyboardType(.phonePad)
             }

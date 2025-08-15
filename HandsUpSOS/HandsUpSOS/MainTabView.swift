@@ -49,6 +49,7 @@ struct MainTabView: View {
                 .tag(4)
             
         }
+        .accentColor(.gray) // Make all tabs the same color
         .toolbar(selectedTab == 0 ? .hidden : .visible, for: .tabBar)
     }
 }
