@@ -41,7 +41,12 @@ class ContactHelper: ObservableObject {
     
     func removeContact(at indexSet: IndexSet) {
         DispatchQueue.main.async {
-            self.contacts.remove(atOffsets: indexSet)
+            let sortedIndices = indexSet.sorted(by: >)
+            for index in sortedIndices {
+                if index < self.contacts.count {
+                    self.contacts.remove(at: index)
+                }
+            }
             self.saveContacts()
         }
     }

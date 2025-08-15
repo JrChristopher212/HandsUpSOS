@@ -65,6 +65,8 @@ struct SettingsView: View {
                     content: canSendSMSText,
                     isGood: canSendSMS
                 )
+                
+                StateSelectionCard()
             }
             
             // Contact Management Section
@@ -101,6 +103,51 @@ struct StatusCard: View {
             Text(content)
                 .font(.caption)
                 .foregroundColor(.secondary)
+        }
+        .padding()
+        .background(Color(.systemGray6))
+        .clipShape(RoundedRectangle(cornerRadius: 10))
+    }
+}
+
+struct StateSelectionCard: View {
+    @State private var selectedState = "Victoria"
+    
+    let australianStates = [
+        "Australian Capital Territory",
+        "New South Wales", 
+        "Northern Territory",
+        "Queensland",
+        "South Australia",
+        "Tasmania",
+        "Victoria",
+        "Western Australia"
+    ]
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 5) {
+            HStack {
+                Text("State Selection")
+                    .font(.headline)
+                Spacer()
+                Text("✅")
+            }
+            
+            HStack {
+                Text("Current State:")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                
+                Spacer()
+                
+                Picker("Select State", selection: $selectedState) {
+                    ForEach(australianStates, id: \.self) { state in
+                        Text(state).tag(state)
+                    }
+                }
+                .pickerStyle(MenuPickerStyle())
+                .accentColor(.blue)
+            }
         }
         .padding()
         .background(Color(.systemGray6))

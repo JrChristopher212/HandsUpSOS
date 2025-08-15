@@ -25,6 +25,12 @@ struct CampsiteMapView: View {
                         }
                     }
                 }
+                .onAppear {
+                    print("🗺️ Map appeared with \(campsiteManager.campsites.count) campsites")
+                    for (index, campsite) in campsiteManager.campsites.enumerated() {
+                        print("📍 Campsite \(index + 1): \(campsite.name) at \(campsite.location.latitude), \(campsite.location.longitude)")
+                    }
+                }
                 .onTapGesture { location in
                     // Handle map tap to add pin
                     handleMapTap(at: location)

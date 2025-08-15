@@ -15,7 +15,7 @@ struct ProfileView: View {
     var body: some View {
         Form {
             // Personal Information Section
-            Section("👤 Personal Information") {
+            Section(header: Text("👤 Personal Information")) {
                 TextField("Your name (for emergency services)", text: $userName)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                 
@@ -24,11 +24,10 @@ struct ProfileView: View {
                 
                 TextField("Next of kin contact phone", text: $emergencyContactPhone)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .keyboardType(.phonePad)
             }
             
             // Medical Information Section
-            Section("🏥 Medical Information") {
+            Section(header: Text("🏥 Medical Information")) {
                 Picker("Blood Type", selection: $bloodType) {
                     ForEach(bloodTypes, id: \.self) { type in
                         Text(type).tag(type)
@@ -46,7 +45,7 @@ struct ProfileView: View {
             }
             
             // Emergency Notes Section
-            Section("🚨 Emergency Notes") {
+            Section(header: Text("🚨 Emergency Notes")) {
                 TextEditor(text: $emergencyNotes)
                     .frame(height: 100)
                     .overlay(

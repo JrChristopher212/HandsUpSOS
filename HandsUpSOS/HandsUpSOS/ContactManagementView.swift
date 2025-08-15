@@ -56,25 +56,24 @@ struct ContactManagementView: View {
                     .padding()
                 } else if contactHelper.contacts.isEmpty {
                     VStack(spacing: 20) {
-                        Text("📱 No Emergency Contacts")
+                        Text("📱 Select Emergency Contacts")
                             .font(.title2)
                             .fontWeight(.semibold)
                         
-                        Text("Add contacts who should receive your emergency SOS messages")
+                        Text("Choose contacts who should receive your emergency SOS messages")
                             .font(.body)
                             .foregroundColor(.secondary)
                             .multilineTextAlignment(.center)
                             .padding(.horizontal)
                         
-                        Button("➕ Add Contact") {
+                        Button("📋 Select from Contacts") {
                             safelyShowContactPicker()
                         }
                         .buttonStyle(PrimaryButtonStyle())
                         
-                        Button("🔄 Refresh") {
-                            contactHelper.refreshContacts()
-                        }
-                        .buttonStyle(PrimaryButtonStyle())
+                        Text("Tap to see all your contacts with phone numbers")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
                     }
                     .padding()
                 } else {
@@ -198,12 +197,45 @@ struct ContactManagementView: View {
 
     
     private func safelyShowContactPicker() {
+        print("📱 Opening contact picker...")
+        print("📱 Current contact permission status: \(CNContactStore.authorizationStatus(for: .contacts).rawValue)")
+        
         // Force the contact picker to open - this will trigger permission request if needed
         showingContactPicker = true
     }
     
     private func deleteContact(offsets: IndexSet) {
         contactHelper.removeContact(at: offsets)
+    }
+    
+    private func testContactAccess() {
+        print("🔍 Testing contact access...")
+        let store = CNContactStore()
+        
+        let request = CNContactFetchRequest(keysToFetch: [
+            CNContactGivenNameKey as CNKeyDescriptor,
+            CNContactFamilyNameKey as CNKeyDescriptor,
+            CNContactPhoneNumbersKey as CNKeyDescriptor
+        ])
+        
+        do {
+            var contactCount = 0
+            var phoneContactCount = 0
+            
+            try store.enumerateContacts(with: request) { contact, stop in
+                contactCount += 1
+                if !contact.phoneNumbers.isEmpty {
+                    phoneContactCount += 1
+                    print("📱 Found contact with phone: \(contact.givenName) \(contact.familyName)")
+                }
+            }
+            
+            print("🔍 Total contacts: \(contactCount)")
+            print("🔍 Contacts with phones: \(phoneContactCount)")
+            
+        } catch {
+            print("❌ Error testing contacts: \(error)")
+        }
     }
 }
 
@@ -232,40 +264,146 @@ struct ContactRow: View {
     }
 }
 
-struct ContactPickerView: UIViewControllerRepresentable {
+struct ContactPickerView: View {
     @ObservedObject var contactHelper: ContactHelper
     @Environment(\.dismiss) var dismiss
+    @State private var allContacts: [CNContact] = []
+    @State private var isLoading = false
+    @State private var searchText = ""
     
-    func makeUIViewController(context: Context) -> CNContactPickerViewController {
-        let picker = CNContactPickerViewController()
-        picker.delegate = context.coordinator
-        picker.predicateForEnablingContact = NSPredicate(format: "phoneNumbers.@count > 0")
-        return picker
-    }
-    
-    func updateUIViewController(_ uiViewController: CNContactPickerViewController, context: Context) {}
-    
-    func makeCoordinator() -> Coordinator {
-        Coordinator(self)
-    }
-    
-    class Coordinator: NSObject, CNContactPickerDelegate {
-        let parent: ContactPickerView
-        
-        init(_ parent: ContactPickerView) {
-            self.parent = parent
+    var filteredContacts: [CNContact] {
+        if searchText.isEmpty {
+            return allContacts
         }
-        
-        func contactPicker(_ picker: CNContactPickerViewController, didSelect contact: CNContact) {
-            if !contact.phoneNumbers.isEmpty {
-                parent.contactHelper.addContact(contact)
+        return allContacts.filter { contact in
+            let fullName = "\(contact.givenName) \(contact.familyName)".lowercased()
+            return fullName.contains(searchText.lowercased())
+        }
+    }
+    
+    var body: some View {
+        NavigationStack {
+            VStack {
+                if isLoading {
+                    VStack(spacing: 20) {
+                        ProgressView()
+                            .scaleEffect(1.5)
+                        Text("Loading contacts...")
+                            .font(.body)
+                            .foregroundColor(.secondary)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else if allContacts.isEmpty {
+                    VStack(spacing: 20) {
+                        Text("📱 No Contacts Found")
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                        
+                        Text("Make sure you have contacts with phone numbers in your phone")
+                            .font(.body)
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    List {
+                        ForEach(filteredContacts, id: \.identifier) { contact in
+                            ContactSelectionRow(contact: contact) {
+                                addContact(contact)
+                            }
+                        }
+                    }
+                    .searchable(text: $searchText, prompt: "Search contacts")
+                }
             }
-            parent.dismiss()
+            .navigationTitle("Select Emergency Contact")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                }
+            }
         }
+        .onAppear {
+            loadAllContacts()
+        }
+    }
+    
+    private func loadAllContacts() {
+        isLoading = true
         
-        func contactPickerDidCancel(_ picker: CNContactPickerViewController) {
-            parent.dismiss()
+        DispatchQueue.global(qos: .userInitiated).async {
+            let store = CNContactStore()
+            let request = CNContactFetchRequest(keysToFetch: [
+                CNContactGivenNameKey as CNKeyDescriptor,
+                CNContactFamilyNameKey as CNKeyDescriptor,
+                CNContactPhoneNumbersKey as CNKeyDescriptor,
+                CNContactIdentifierKey as CNKeyDescriptor
+            ])
+            
+            var contacts: [CNContact] = []
+            
+            do {
+                try store.enumerateContacts(with: request) { contact, stop in
+                    // Only include contacts that have phone numbers
+                    if !contact.phoneNumbers.isEmpty {
+                        contacts.append(contact)
+                    }
+                }
+                
+                DispatchQueue.main.async {
+                    self.allContacts = contacts.sorted { 
+                        "\($0.givenName) \($0.familyName)" < "\($1.givenName) \($1.familyName)" 
+                    }
+                    self.isLoading = false
+                    print("📱 Loaded \(contacts.count) contacts with phone numbers")
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                    print("❌ Error loading contacts: \(error)")
+                }
+            }
         }
+    }
+    
+    private func addContact(_ contact: CNContact) {
+        print("📱 Adding contact: \(contact.givenName) \(contact.familyName)")
+        contactHelper.addContact(contact)
+        dismiss()
+    }
+}
+
+struct ContactSelectionRow: View {
+    let contact: CNContact
+    let onTap: () -> Void
+    
+    var body: some View {
+        Button(action: onTap) {
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("\(contact.givenName) \(contact.familyName)")
+                        .font(.headline)
+                        .foregroundColor(.primary)
+                    
+                    if let phoneNumber = contact.phoneNumbers.first?.value.stringValue {
+                        Text(phoneNumber)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                
+                Spacer()
+                
+                Text("📱")
+                    .font(.title2)
+            }
+            .padding(.vertical, 4)
+        }
+        .buttonStyle(PlainButtonStyle())
     }
 }
 

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import MessageUI
+import Contacts
 
 struct ContentView: View {
     @ObservedObject var locationHelper: LocationHelper
@@ -71,6 +72,98 @@ struct ContentView: View {
                         .multilineTextAlignment(.center)
                 }
                 
+                // Fire Rating Section (smaller)
+                VStack(spacing: 10) {
+                    HStack {
+                        Text("🔥 Fire Rating")
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                        Spacer()
+                        
+                        Text("Moderate")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.orange)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(Color.orange.opacity(0.2))
+                            .clipShape(RoundedRectangle(cornerRadius: 6))
+                    }
+                }
+                .padding()
+                .background(Color(.systemGray6))
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+                
+                // Emergency Fire Warnings Section
+                VStack(spacing: 15) {
+                    HStack {
+                        Text("🚨 Emergency Fire Warnings")
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                        Spacer()
+                    }
+                    
+                    HStack {
+                        Text("Current Alerts:")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                        
+                        Spacer()
+                        
+                        Text("None")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.green)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 4)
+                            .background(Color.green.opacity(0.2))
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                    }
+                    
+                    Text("No active fire warnings in your area.")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .padding()
+                .background(Color(.systemGray6))
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+                
+                // Weather Warnings Section
+                VStack(spacing: 15) {
+                    HStack {
+                        Text("🌦️ Emergency Weather Warnings")
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                        Spacer()
+                    }
+                    
+                    HStack {
+                        Text("Current Alerts:")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                        
+                        Spacer()
+                        
+                        Text("None")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.green)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 4)
+                            .background(Color.green.opacity(0.2))
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                    }
+                    
+                    Text("No severe weather warnings for your area.")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .padding()
+                .background(Color(.systemGray6))
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+                
                 // Nearby Campsites & Emergency Info Section
                 VStack(spacing: 15) {
                     HStack {
@@ -84,16 +177,16 @@ struct ContentView: View {
                         Text("No campsites found within 50km")
                             .font(.caption)
                             .foregroundColor(.secondary)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color(.systemGray6))
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                            .frame(maxWidth: .infinity, alignment: .leading)
                     } else {
                         ForEach(nearbyCampsites.prefix(3)) { campsite in
                             NearbyCampsiteRow(campsite: campsite)
                         }
                     }
                 }
+                .padding()
+                .background(Color(.systemGray6))
+                .clipShape(RoundedRectangle(cornerRadius: 10))
                 
                 Spacer()
                 
@@ -160,6 +253,11 @@ struct ContentView: View {
         .onAppear {
             // Cache computed values for performance
             updateCache()
+            locationHelper.getCurrentLocation()
+            loadUserName()
+            
+            // Automatically request contact permission if not granted
+            requestContactPermissionIfNeeded()
         }
         .onChange(of: contactHelper.contacts.count) { _, _ in
             // Update cache when contacts change
@@ -168,10 +266,6 @@ struct ContentView: View {
         .onChange(of: locationHelper.hasPermission) { _, _ in
             // Update cache when location permission changes
             updateCache()
-        }
-        .onAppear {
-            locationHelper.getCurrentLocation()
-            loadUserName()
         }
         .onChange(of: userName) { _, _ in
             saveUserName()
@@ -200,13 +294,27 @@ struct ContentView: View {
     }
     
     func handleEmergencyPressed() {
+        print("🚨 Emergency button tapped!")
+        print("📱 canSendSOS: \(canSendSOS)")
+        print("📱 cachedCanSendSOS: \(cachedCanSendSOS)")
+        print("📱 contacts count: \(contactHelper.contacts.count)")
+        print("📱 canSendSMS: \(canSendSMS)")
+        print("📱 location permission: \(locationHelper.hasPermission)")
+        
         locationHelper.getCurrentLocation()
         showingEmergencyOptions = true
+        print("🚨 showingEmergencyOptions set to: \(showingEmergencyOptions)")
     }
     
     private func updateCache() {
+        print("🔄 updateCache() called")
         cachedCanSendSMS = canSendSMS
-        cachedCanSendSOS = !contactHelper.contacts.isEmpty && cachedCanSendSMS && locationHelper.hasPermission
+        cachedCanSendSOS = !contactHelper.contacts.isEmpty && canSendSMS && locationHelper.hasPermission
+        print("🔄 cachedCanSendSMS: \(cachedCanSendSMS)")
+        print("🔄 cachedCanSendSOS: \(cachedCanSendSOS)")
+        print("🔄 contacts.isEmpty: \(contactHelper.contacts.isEmpty)")
+        print("🔄 canSendSMS: \(canSendSMS)")
+        print("🔄 locationHelper.hasPermission: \(locationHelper.hasPermission)")
     }
     
     func createEmergencyButtons() -> some View {
@@ -249,6 +357,32 @@ struct ContentView: View {
     
     func loadUserName() {
         userName = UserDefaults.standard.string(forKey: "UserName") ?? ""
+    }
+    
+    private func requestContactPermissionIfNeeded() {
+        let status = CNContactStore.authorizationStatus(for: .contacts)
+        
+        switch status {
+        case .notDetermined:
+            print("📱 Requesting contact permission...")
+            let store = CNContactStore()
+            store.requestAccess(for: .contacts) { granted, error in
+                DispatchQueue.main.async {
+                    if granted {
+                        print("✅ Contact permission granted automatically!")
+                        self.updateCache()
+                    } else {
+                        print("❌ Contact permission denied automatically")
+                    }
+                }
+            }
+        case .authorized, .limited:
+            print("✅ Contact permission already granted")
+        case .denied, .restricted:
+            print("❌ Contact permission denied or restricted")
+        @unknown default:
+            print("❓ Unknown contact permission status")
+        }
     }
 }
 

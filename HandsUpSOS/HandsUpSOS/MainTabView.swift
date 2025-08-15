@@ -1,9 +1,10 @@
 import SwiftUI
+import Foundation
 
 struct MainTabView: View {
-    @StateObject private var contactHelper = ContactHelper()
-    @StateObject private var locationHelper = LocationHelper()
-    @StateObject private var campsiteManager = CampsiteManager()
+    @StateObject private var contactHelper: ContactHelper = ContactHelper()
+    @StateObject private var locationHelper: LocationHelper = LocationHelper()
+    @StateObject private var campsiteManager: CampsiteManager = CampsiteManager()
     @State private var selectedTab = 0
     
     var body: some View {
