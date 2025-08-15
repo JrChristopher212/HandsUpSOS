@@ -8,6 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		94B228632E4E99A30081C8F9 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B228622E4E99A30081C8F9 /* ProfileView.swift */; };
+		94B228672E4ED84D0081C8F9 /* StateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B228662E4ED84D0081C8F9 /* StateManager.swift */; };
+		94B2286D2E4EE1050081C8F9 /* FireRatingSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B2286C2E4EE1050081C8F9 /* FireRatingSection.swift */; };
+		94B2286F2E4EE1150081C8F9 /* FireWarningSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B2286E2E4EE1150081C8F9 /* FireWarningSection.swift */; };
+		94B228712E4EE1270081C8F9 /* NearbyResourcesSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B228702E4EE1270081C8F9 /* NearbyResourcesSection.swift */; };
+		94B228732E4EE1380081C8F9 /* WeatherWarningSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B228722E4EE1380081C8F9 /* WeatherWarningSection.swift */; };
+		94B228752E4EE3A10081C8F9 /* EmergencyWarningService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B228742E4EE3A10081C8F9 /* EmergencyWarningService.swift */; };
+		94B228772E4EF6990081C8F9 /* FireWarningEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B228762E4EF6990081C8F9 /* FireWarningEmptyView.swift */; };
+		94B228792E4EF6A60081C8F9 /* FireWarningListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B228782E4EF6A60081C8F9 /* FireWarningListView.swift */; };
+		94B2287B2E4EF6B30081C8F9 /* FireWarningLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B2287A2E4EF6B30081C8F9 /* FireWarningLoadingView.swift */; };
+		94B2287D2E4EF6BF0081C8F9 /* WeatherWarningEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B2287C2E4EF6BF0081C8F9 /* WeatherWarningEmptyView.swift */; };
+		94B2287F2E4EF6D80081C8F9 /* WeatherWarningListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B2287E2E4EF6D80081C8F9 /* WeatherWarningListView.swift */; };
+		94B228812E4EF6E40081C8F9 /* WeatherWarningLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B228802E4EF6E40081C8F9 /* WeatherWarningLoadingView.swift */; };
 		94E6B6282E4E7BDD00CB15D5 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E6B6272E4E7BDD00CB15D5 /* SettingsView.swift */; };
 		94E6B62A2E4E7CE200CB15D5 /* CampsiteDataUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E6B6292E4E7CE200CB15D5 /* CampsiteDataUtilities.swift */; };
 		94E6B6462E4E85FC00CB15D5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 94E6B6452E4E85FC00CB15D5 /* Assets.xcassets */; };
@@ -28,6 +40,18 @@
 
 /* Begin PBXFileReference section */
 		94B228622E4E99A30081C8F9 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		94B228662E4ED84D0081C8F9 /* StateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateManager.swift; sourceTree = "<group>"; };
+		94B2286C2E4EE1050081C8F9 /* FireRatingSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireRatingSection.swift; sourceTree = "<group>"; };
+		94B2286E2E4EE1150081C8F9 /* FireWarningSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireWarningSection.swift; sourceTree = "<group>"; };
+		94B228702E4EE1270081C8F9 /* NearbyResourcesSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbyResourcesSection.swift; sourceTree = "<group>"; };
+		94B228722E4EE1380081C8F9 /* WeatherWarningSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherWarningSection.swift; sourceTree = "<group>"; };
+		94B228742E4EE3A10081C8F9 /* EmergencyWarningService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyWarningService.swift; sourceTree = "<group>"; };
+		94B228762E4EF6990081C8F9 /* FireWarningEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireWarningEmptyView.swift; sourceTree = "<group>"; };
+		94B228782E4EF6A60081C8F9 /* FireWarningListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireWarningListView.swift; sourceTree = "<group>"; };
+		94B2287A2E4EF6B30081C8F9 /* FireWarningLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireWarningLoadingView.swift; sourceTree = "<group>"; };
+		94B2287C2E4EF6BF0081C8F9 /* WeatherWarningEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherWarningEmptyView.swift; sourceTree = "<group>"; };
+		94B2287E2E4EF6D80081C8F9 /* WeatherWarningListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherWarningListView.swift; sourceTree = "<group>"; };
+		94B228802E4EF6E40081C8F9 /* WeatherWarningLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherWarningLoadingView.swift; sourceTree = "<group>"; };
 		94E6B6272E4E7BDD00CB15D5 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		94E6B6292E4E7CE200CB15D5 /* CampsiteDataUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampsiteDataUtilities.swift; sourceTree = "<group>"; };
 		94E6B6452E4E85FC00CB15D5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -62,6 +86,18 @@
 		A1234567890123456789014F /* HandsUpSOS */ = {
 			isa = PBXGroup;
 			children = (
+				94B228802E4EF6E40081C8F9 /* WeatherWarningLoadingView.swift */,
+				94B2287E2E4EF6D80081C8F9 /* WeatherWarningListView.swift */,
+				94B2287C2E4EF6BF0081C8F9 /* WeatherWarningEmptyView.swift */,
+				94B2287A2E4EF6B30081C8F9 /* FireWarningLoadingView.swift */,
+				94B228782E4EF6A60081C8F9 /* FireWarningListView.swift */,
+				94B228762E4EF6990081C8F9 /* FireWarningEmptyView.swift */,
+				94B228722E4EE1380081C8F9 /* WeatherWarningSection.swift */,
+				94B228702E4EE1270081C8F9 /* NearbyResourcesSection.swift */,
+				94B2286E2E4EE1150081C8F9 /* FireWarningSection.swift */,
+				94B2286C2E4EE1050081C8F9 /* FireRatingSection.swift */,
+				94B228742E4EE3A10081C8F9 /* EmergencyWarningService.swift */,
+				94B228662E4ED84D0081C8F9 /* StateManager.swift */,
 				94B228622E4E99A30081C8F9 /* ProfileView.swift */,
 				94E6B6292E4E7CE200CB15D5 /* CampsiteDataUtilities.swift */,
 				94E6B6272E4E7BDD00CB15D5 /* SettingsView.swift */,
@@ -172,20 +208,32 @@
 			buildActionMask = 2147483647;
 			files = (
 				A1234567890123456789014A /* HandsUpSOSApp.swift in Sources */,
+				94B228712E4EE1270081C8F9 /* NearbyResourcesSection.swift in Sources */,
 				A1234567890123456789012A /* ContentView.swift in Sources */,
 				A1234567890123456789012C /* ContactHelper.swift in Sources */,
 				A1234567890123456789012E /* ContactManagementView.swift in Sources */,
 				A1234567890123456789013A /* EmergencyMessageBuilder.swift in Sources */,
+				94B2287F2E4EF6D80081C8F9 /* WeatherWarningListView.swift in Sources */,
+				94B2286D2E4EE1050081C8F9 /* FireRatingSection.swift in Sources */,
+				94B2286F2E4EE1150081C8F9 /* FireWarningSection.swift in Sources */,
+				94B2287D2E4EF6BF0081C8F9 /* WeatherWarningEmptyView.swift in Sources */,
+				94B228672E4ED84D0081C8F9 /* StateManager.swift in Sources */,
 				A1234567890123456789013C /* LocationHelper.swift in Sources */,
 				94E6B62A2E4E7CE200CB15D5 /* CampsiteDataUtilities.swift in Sources */,
 				A1234567890123456789013E /* MessageComposeView.swift in Sources */,
+				94B228752E4EE3A10081C8F9 /* EmergencyWarningService.swift in Sources */,
+				94B228772E4EF6990081C8F9 /* FireWarningEmptyView.swift in Sources */,
 				94B228632E4E99A30081C8F9 /* ProfileView.swift in Sources */,
+				94B228792E4EF6A60081C8F9 /* FireWarningListView.swift in Sources */,
 				94E6B6282E4E7BDD00CB15D5 /* SettingsView.swift in Sources */,
 				A1234567890123456789014G /* EmergencyTemplate.swift in Sources */,
 				A1234567890123456789017E /* CampsiteModel.swift in Sources */,
 				A1234567890123456789018A /* CampsiteManager.swift in Sources */,
 				A1234567890123456789018C /* CampsiteMapView.swift in Sources */,
 				A1234567890123456789018E /* CampsiteListView.swift in Sources */,
+				94B2287B2E4EF6B30081C8F9 /* FireWarningLoadingView.swift in Sources */,
+				94B228812E4EF6E40081C8F9 /* WeatherWarningLoadingView.swift in Sources */,
+				94B228732E4EE1380081C8F9 /* WeatherWarningSection.swift in Sources */,
 				A1234567890123456789019A /* MainTabView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

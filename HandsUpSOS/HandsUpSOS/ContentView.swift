@@ -13,6 +13,8 @@ struct ContentView: View {
     @ObservedObject var locationHelper: LocationHelper
     @ObservedObject var contactHelper: ContactHelper
     @ObservedObject var campsiteManager: CampsiteManager
+    @ObservedObject var stateManager: StateManager
+    @StateObject private var warningService = EmergencyWarningService()
     
     @State private var showingContactSheet = false
     @State private var showingEmergencyOptions = false
@@ -72,136 +74,21 @@ struct ContentView: View {
                         .multilineTextAlignment(.center)
                 }
                 
-                // Fire Rating Section (smaller)
-                VStack(spacing: 10) {
-                    HStack {
-                        Text("🔥 Fire Rating")
-                            .font(.headline)
-                            .fontWeight(.semibold)
-                        Spacer()
-                        
-                        Text("Moderate")
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.orange)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 4)
-                            .background(Color.orange.opacity(0.2))
-                            .clipShape(RoundedRectangle(cornerRadius: 6))
-                    }
-                }
-                .padding()
-                .background(Color(.systemGray6))
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+                // Fire Rating Section
+                FireRatingSection(stateManager: stateManager)
                 
-                // Emergency Fire Warnings Section
-                VStack(spacing: 15) {
-                    HStack {
-                        Text("🚨 Emergency Fire Warnings")
-                            .font(.headline)
-                            .fontWeight(.semibold)
-                        Spacer()
-                    }
-                    
-                    HStack {
-                        Text("Current Alerts:")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                        
-                        Spacer()
-                        
-                        Text("None")
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.green)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 4)
-                            .background(Color.green.opacity(0.2))
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
-                    }
-                    
-                    Text("No active fire warnings in your area.")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-                .padding()
-                .background(Color(.systemGray6))
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+                                // Emergency Fire Warnings Section
+                FireWarningSection(warningService: warningService, stateManager: stateManager)
                 
                 // Weather Warnings Section
-                VStack(spacing: 15) {
-                    HStack {
-                        Text("🌦️ Emergency Weather Warnings")
-                            .font(.headline)
-                            .fontWeight(.semibold)
-                        Spacer()
-                    }
-                    
-                    HStack {
-                        Text("Current Alerts:")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                        
-                        Spacer()
-                        
-                        Text("None")
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.green)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 4)
-                            .background(Color.green.opacity(0.2))
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
-                    }
-                    
-                    Text("No severe weather warnings for your area.")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-                .padding()
-                .background(Color(.systemGray6))
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+                WeatherWarningSection(warningService: warningService, stateManager: stateManager)
                 
-                // Nearby Campsites & Emergency Info Section
-                VStack(spacing: 15) {
-                    HStack {
-                        Text("🚨 Nearby Emergency Resources")
-                            .font(.headline)
-                            .fontWeight(.semibold)
-                        Spacer()
-                    }
-                    
-                    if nearbyCampsites.isEmpty {
-                        Text("No campsites found within 50km")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    } else {
-                        ForEach(nearbyCampsites.prefix(3)) { campsite in
-                            NearbyCampsiteRow(campsite: campsite)
-                        }
-                    }
-                }
-                .padding()
-                .background(Color(.systemGray6))
-                .clipShape(RoundedRectangle(cornerRadius: 10))
+                // Nearby Emergency Resources Section
+                NearbyResourcesSection(campsiteManager: campsiteManager, locationHelper: locationHelper)
                 
                 Spacer()
                 
-                // Copy Emergency Message Button
-                if !emergencyMessage.isEmpty {
-                    VStack(spacing: 15) {
-                        Button("📋 Copy Emergency Message") {
-                            UIPasteboard.general.string = emergencyMessage
-                            alertMessage = "Emergency message copied to clipboard!"
-                            showingAlert = true
-                        }
-                        .buttonStyle(SecondaryButtonStyle())
-                        .foregroundColor(.green)
-                    }
-                }
+
             }
             .padding()
             .background(
@@ -288,10 +175,7 @@ struct ContentView: View {
         cachedCanSendSOS
     }
     
-    var nearbyCampsites: [Campsite] {
-        guard let currentLocation = locationHelper.currentLocation else { return [] }
-        return campsiteManager.getCampsitesNearby(coordinate: currentLocation.coordinate, radius: 50.0)
-    }
+
     
     func handleEmergencyPressed() {
         print("🚨 Emergency button tapped!")
@@ -521,6 +405,7 @@ struct SecondaryButtonStyle: ButtonStyle {
     ContentView(
         locationHelper: LocationHelper(),
         contactHelper: ContactHelper(),
-        campsiteManager: CampsiteManager()
+        campsiteManager: CampsiteManager(),
+        stateManager: StateManager()
     )
 }

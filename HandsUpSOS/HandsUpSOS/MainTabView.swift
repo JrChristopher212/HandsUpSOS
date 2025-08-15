@@ -5,12 +5,13 @@ struct MainTabView: View {
     @StateObject private var contactHelper: ContactHelper = ContactHelper()
     @StateObject private var locationHelper: LocationHelper = LocationHelper()
     @StateObject private var campsiteManager: CampsiteManager = CampsiteManager()
+    @StateObject private var stateManager: StateManager = StateManager()
     @State private var selectedTab = 0
     
     var body: some View {
         TabView(selection: $selectedTab) {
             // Emergency SOS Tab
-            ContentView(locationHelper: locationHelper, contactHelper: contactHelper, campsiteManager: campsiteManager)
+            ContentView(locationHelper: locationHelper, contactHelper: contactHelper, campsiteManager: campsiteManager, stateManager: stateManager)
                 .tabItem {
                     Image(systemName: "exclamationmark.triangle.fill")
                     Text("Emergency SOS")
@@ -34,7 +35,7 @@ struct MainTabView: View {
                 .tag(2)
             
             // Settings Tab
-            SettingsView(locationHelper: locationHelper, contactHelper: contactHelper)
+            SettingsView(locationHelper: locationHelper, contactHelper: contactHelper, stateManager: stateManager)
                 .tabItem {
                     Image(systemName: "gear")
                     Text("Settings")

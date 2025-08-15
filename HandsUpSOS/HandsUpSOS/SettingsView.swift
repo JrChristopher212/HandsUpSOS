@@ -4,6 +4,7 @@ import MessageUI
 struct SettingsView: View {
     @ObservedObject var locationHelper: LocationHelper
     @ObservedObject var contactHelper: ContactHelper
+    @ObservedObject var stateManager: StateManager
     @State private var showingContactSheet = false
     
     // SMS capability logic
@@ -66,7 +67,7 @@ struct SettingsView: View {
                     isGood: canSendSMS
                 )
                 
-                StateSelectionCard()
+                StateSelectionCard(stateManager: stateManager)
             }
             
             // Contact Management Section
@@ -111,18 +112,7 @@ struct StatusCard: View {
 }
 
 struct StateSelectionCard: View {
-    @State private var selectedState = "Victoria"
-    
-    let australianStates = [
-        "Australian Capital Territory",
-        "New South Wales", 
-        "Northern Territory",
-        "Queensland",
-        "South Australia",
-        "Tasmania",
-        "Victoria",
-        "Western Australia"
-    ]
+    @ObservedObject var stateManager: StateManager
     
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
@@ -140,8 +130,8 @@ struct StateSelectionCard: View {
                 
                 Spacer()
                 
-                Picker("Select State", selection: $selectedState) {
-                    ForEach(australianStates, id: \.self) { state in
+                Picker("Select State", selection: $stateManager.selectedState) {
+                    ForEach(stateManager.australianStates, id: \.self) { state in
                         Text(state).tag(state)
                     }
                 }
@@ -158,6 +148,7 @@ struct StateSelectionCard: View {
 #Preview {
     SettingsView(
         locationHelper: LocationHelper(),
-        contactHelper: ContactHelper()
+        contactHelper: ContactHelper(),
+        stateManager: StateManager()
     )
 }

@@ -4,16 +4,22 @@ import SwiftUI
 
 // MARK: - Emergency Warning Models
 struct EmergencyWarning: Identifiable, Codable {
-    let id = UUID()
+    let id: UUID
     let type: WarningType
     let severity: WarningSeverity
     let title: String
     let description: String
     let location: String
-    let coordinates: CLLocationCoordinate2D?
+    let latitude: Double?
+    let longitude: Double?
     let issuedDate: Date
     let expiresDate: Date?
     let source: String
+    
+    var coordinates: CLLocationCoordinate2D? {
+        guard let lat = latitude, let lon = longitude else { return nil }
+        return CLLocationCoordinate2D(latitude: lat, longitude: lon)
+    }
     
     enum WarningType: String, CaseIterable, Codable {
         case fire = "Fire"
@@ -63,6 +69,16 @@ struct EmergencyWarning: Identifiable, Codable {
             case .high: return 3
             case .severe: return 4
             case .critical: return 5
+            }
+        }
+        
+        var color: Color {
+            switch self {
+            case .low: return .green
+            case .moderate: return .yellow
+            case .high: return .orange
+            case .severe: return .red
+            case .critical: return .purple
             }
         }
         
@@ -130,14 +146,25 @@ class EmergencyWarningService: ObservableObject {
         isLoading = true
         errorMessage = nil
         
-        // TODO: Implement actual API calls to emergency warning services
-        // For now, we'll use mock data
-        
-        // Simulate network delay
-        try? await Task.sleep(nanoseconds: 1_000_000_000) // 1 second
-        
-        isLoading = false
-        lastUpdated = Date()
+        do {
+            // Fetch weather warnings from BOM
+            let weatherWarnings = try await fetchBOMWeatherWarnings()
+            
+            // Fetch fire warnings from state services (placeholder for now)
+            let fireWarnings = try await fetchStateFireWarnings()
+            
+            // Combine all warnings
+            activeWarnings = weatherWarnings + fireWarnings
+            
+            isLoading = false
+            lastUpdated = Date()
+            errorMessage = nil
+            
+        } catch {
+            isLoading = false
+            errorMessage = "Failed to fetch warnings: \(error.localizedDescription)"
+            print("❌ Error fetching warnings: \(error)")
+        }
     }
     
     // MARK: - Mock Data (Temporary for testing)
@@ -145,34 +172,40 @@ class EmergencyWarningService: ObservableObject {
     private func loadMockWarnings() {
         let mockWarnings = [
             EmergencyWarning(
+                id: UUID(),
                 type: .fire,
                 severity: .critical,
                 title: "Bushfire Warning - Blue Mountains",
                 description: "Extreme fire danger in Blue Mountains National Park. Evacuate immediately if in affected areas.",
                 location: "Blue Mountains, NSW",
-                coordinates: CLLocationCoordinate2D(latitude: -33.7128, longitude: 150.3119),
+                latitude: -33.7128,
+                longitude: 150.3119,
                 issuedDate: Date(),
                 expiresDate: Calendar.current.date(byAdding: .hour, value: 6, to: Date()),
                 source: "NSW Rural Fire Service"
             ),
             EmergencyWarning(
+                id: UUID(),
                 type: .severeWeather,
                 severity: .high,
                 title: "Severe Storm Warning - Sydney Region",
                 description: "Heavy rainfall, damaging winds, and large hail expected across Sydney metropolitan area.",
                 location: "Sydney Region, NSW",
-                coordinates: CLLocationCoordinate2D(latitude: -33.8688, longitude: 151.2093),
+                latitude: -33.8688,
+                longitude: 151.2093,
                 issuedDate: Date(),
                 expiresDate: Calendar.current.date(byAdding: .hour, value: 3, to: Date()),
                 source: "Bureau of Meteorology"
             ),
             EmergencyWarning(
+                id: UUID(),
                 type: .heatwave,
                 severity: .moderate,
                 title: "Heatwave Warning - Victoria",
                 description: "Extended period of hot weather expected across Victoria with temperatures above 35°C.",
                 location: "Victoria",
-                coordinates: CLLocationCoordinate2D(latitude: -37.8136, longitude: 144.9631),
+                latitude: -37.8136,
+                longitude: 144.9631,
                 issuedDate: Date(),
                 expiresDate: Calendar.current.date(byAdding: .day, value: 3, to: Date()),
                 source: "Bureau of Meteorology"
@@ -188,24 +221,71 @@ class EmergencyWarningService: ObservableObject {
         let toLocation = CLLocation(latitude: to.latitude, longitude: to.longitude)
         return fromLocation.distance(from: toLocation) / 1000 // Convert to kilometers
     }
+    
+    // MARK: - BOM API Integration
+    
+    private func fetchBOMWeatherWarnings() async throws -> [EmergencyWarning] {
+        // BOM API endpoint for warnings
+        let baseURL = "https://www.bom.gov.au/fwo/IDZ00054.warnings_ww.xml"
+        
+        guard let url = URL(string: baseURL) else {
+            throw WarningError.invalidURL
+        }
+        
+        let (data, response) = try await URLSession.shared.data(from: url)
+        
+        guard let httpResponse = response as? HTTPURLResponse,
+              httpResponse.statusCode == 200 else {
+            throw WarningError.networkError
+        }
+        
+        // Parse XML response (simplified for now)
+        return try parseBOMWarnings(from: data)
+    }
+    
+    private func parseBOMWarnings(from data: Data) throws -> [EmergencyWarning] {
+        // For now, return a sample warning to test the flow
+        // TODO: Implement proper XML parsing
+        let sampleWarning = EmergencyWarning(
+            id: UUID(),
+            type: .severeWeather,
+            severity: .high,
+            title: "Severe Weather Warning - BOM Data",
+            description: "Real-time weather warning from Bureau of Meteorology",
+            location: "Victoria",
+            latitude: -37.8136,
+            longitude: 144.9631,
+            issuedDate: Date(),
+            expiresDate: Calendar.current.date(byAdding: .hour, value: 2, to: Date()),
+            source: "Bureau of Meteorology"
+        )
+        
+        return [sampleWarning]
+    }
+    
+    private func fetchStateFireWarnings() async throws -> [EmergencyWarning] {
+        // Placeholder for state fire service APIs
+        // TODO: Implement actual state fire service calls
+        return []
+    }
 }
 
-// MARK: - CLLocationCoordinate2D Codable Extension
-extension CLLocationCoordinate2D: Codable {
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        let latitude = try container.decode(Double.self, forKey: .latitude)
-        let longitude = try container.decode(Double.self, forKey: .longitude)
-        self.init(latitude: latitude, longitude: longitude)
-    }
+// MARK: - Error Types
+
+enum WarningError: Error, LocalizedError {
+    case invalidURL
+    case networkError
+    case parsingError
     
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(latitude, forKey: .latitude)
-        try container.encode(longitude, forKey: .longitude)
-    }
-    
-    private enum CodingKeys: String, CodingKey {
-        case latitude, longitude
+    var errorDescription: String? {
+        switch self {
+        case .invalidURL:
+            return "Invalid URL for warning service"
+        case .networkError:
+            return "Network error while fetching warnings"
+        case .parsingError:
+            return "Error parsing warning data"
+        }
     }
 }
+
