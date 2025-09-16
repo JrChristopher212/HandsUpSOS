@@ -25,9 +25,7 @@ struct ContentView: View {
     @State private var showingAlert = false
     @State private var alertMessage = ""
     
-    // Performance optimization: cache computed values
-    @State private var cachedCanSendSOS = false
-    @State private var cachedCanSendSMS = false
+    // Removed complex caching - using direct computed properties instead
     
     var body: some View {
         VStack(spacing: 25) {
@@ -68,14 +66,34 @@ struct ContentView: View {
                 .animation(.easeInOut(duration: 0.3).speed(0.8), value: canSendSOS)
                 
                 if !canSendSOS {
-                    Text("⚠️ Setup needed: Add contacts & enable location")
+                    VStack(spacing: 8) {
+                        Text("⚠️ Setup needed:")
+                            .font(.caption)
+                            .foregroundColor(.orange)
+                            .multilineTextAlignment(.center)
+                        
+                        if contactHelper.contacts.isEmpty {
+                            Text("• Add emergency contacts")
+                                .font(.caption2)
+                                .foregroundColor(.orange)
+                        }
+                        
+                        if !locationHelper.hasPermission {
+                            Text("• Enable location access")
+                                .font(.caption2)
+                                .foregroundColor(.orange)
+                        }
+                        
+                        Button("Manage Emergency Contacts") {
+                            showingContactSheet = true
+                        }
                         .font(.caption)
-                        .foregroundColor(.orange)
-                        .multilineTextAlignment(.center)
+                        .foregroundColor(.blue)
+                    }
                 }
                 
                 // Fire Rating Section
-                FireRatingSection(stateManager: stateManager)
+                FireRatingSection(warningService: warningService, stateManager: stateManager)
                 
                                 // Emergency Fire Warnings Section
                 FireWarningSection(warningService: warningService, stateManager: stateManager)
@@ -138,24 +156,25 @@ struct ContentView: View {
             }
         }
         .onAppear {
-            // Cache computed values for performance
-            updateCache()
             locationHelper.getCurrentLocation()
             loadUserName()
             
             // Automatically request contact permission if not granted
             requestContactPermissionIfNeeded()
-        }
-        .onChange(of: contactHelper.contacts.count) { _, _ in
-            // Update cache when contacts change
-            updateCache()
-        }
-        .onChange(of: locationHelper.hasPermission) { _, _ in
-            // Update cache when location permission changes
-            updateCache()
+            
+            // Refresh warnings with current location when available
+            if let location = locationHelper.currentLocation {
+                warningService.refreshWarnings(for: location)
+            }
         }
         .onChange(of: userName) { _, _ in
             saveUserName()
+        }
+        .onChange(of: locationHelper.currentLocation) { _, newLocation in
+            // Update warnings when location changes
+            if let location = newLocation {
+                warningService.refreshWarnings(for: location)
+            }
         }
         }
     
@@ -167,12 +186,8 @@ struct ContentView: View {
         #endif
     }
     
-    var canSendSMSText: String {
-        cachedCanSendSMS ? "Ready to send messages" : "SMS not available"
-    }
-    
     var canSendSOS: Bool {
-        cachedCanSendSOS
+        return !contactHelper.contacts.isEmpty && canSendSMS && locationHelper.hasPermission
     }
     
 
@@ -180,26 +195,15 @@ struct ContentView: View {
     func handleEmergencyPressed() {
         print("🚨 Emergency button tapped!")
         print("📱 canSendSOS: \(canSendSOS)")
-        print("📱 cachedCanSendSOS: \(cachedCanSendSOS)")
         print("📱 contacts count: \(contactHelper.contacts.count)")
         print("📱 canSendSMS: \(canSendSMS)")
         print("📱 location permission: \(locationHelper.hasPermission)")
         
         locationHelper.getCurrentLocation()
         showingEmergencyOptions = true
-        print("🚨 showingEmergencyOptions set to: \(showingEmergencyOptions)")
     }
     
-    private func updateCache() {
-        print("🔄 updateCache() called")
-        cachedCanSendSMS = canSendSMS
-        cachedCanSendSOS = !contactHelper.contacts.isEmpty && canSendSMS && locationHelper.hasPermission
-        print("🔄 cachedCanSendSMS: \(cachedCanSendSMS)")
-        print("🔄 cachedCanSendSOS: \(cachedCanSendSOS)")
-        print("🔄 contacts.isEmpty: \(contactHelper.contacts.isEmpty)")
-        print("🔄 canSendSMS: \(canSendSMS)")
-        print("🔄 locationHelper.hasPermission: \(locationHelper.hasPermission)")
-    }
+    // Removed complex caching - canSendSOS is now a simple computed property
     
     func createEmergencyButtons() -> some View {
         ForEach(EmergencyTemplate.campingTemplates, id: \.title) { template in
@@ -215,7 +219,9 @@ struct ContentView: View {
         emergencyMessage = EmergencyMessageBuilder.createMessage(
             template: template,
             userName: userName,
-            location: locationText
+            location: locationText,
+            campsiteManager: campsiteManager,
+            userLocation: locationHelper.currentLocation?.coordinate
         )
         
         showingMessageComposer = true
@@ -254,7 +260,6 @@ struct ContentView: View {
                 DispatchQueue.main.async {
                     if granted {
                         print("✅ Contact permission granted automatically!")
-                        self.updateCache()
                     } else {
                         print("❌ Contact permission denied automatically")
                     }
@@ -263,7 +268,7 @@ struct ContentView: View {
         case .authorized, .limited:
             print("✅ Contact permission already granted")
         case .denied, .restricted:
-            print("❌ Contact permission denied or restricted")
+            print("❌ Contact permission denied or restricted - User needs to enable in Settings")
         @unknown default:
             print("❓ Unknown contact permission status")
         }

@@ -24,10 +24,10 @@ class LocationHelper: NSObject, ObservableObject, CLLocationManagerDelegate {
             getCurrentLocation()
         case .denied, .restricted:
             hasPermission = false
-            locationText = "Location access denied"
+            locationText = "Location access denied - Please enable in Settings"
         case .notDetermined:
             hasPermission = false
-            locationText = "Location permission not determined"
+            locationText = "Location permission needed - Tap to allow"
         @unknown default:
             hasPermission = false
             locationText = "Unknown location permission status"
@@ -67,7 +67,21 @@ class LocationHelper: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         DispatchQueue.main.async {
-            self.locationText = "Location error: \(error.localizedDescription)"
+            if let clError = error as? CLError {
+                switch clError.code {
+                case .denied:
+                    self.locationText = "Location access denied - Please enable in Settings"
+                    self.hasPermission = false
+                case .locationUnknown:
+                    self.locationText = "Location unavailable - Please try again"
+                case .network:
+                    self.locationText = "Network error - Check internet connection"
+                default:
+                    self.locationText = "Location error: \(error.localizedDescription)"
+                }
+            } else {
+                self.locationText = "Location error: \(error.localizedDescription)"
+            }
         }
     }
     

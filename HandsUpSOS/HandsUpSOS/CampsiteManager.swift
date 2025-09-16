@@ -137,6 +137,23 @@ class CampsiteManager: ObservableObject {
         }
     }
     
+    func getNearestCampsiteWithEmergencyInfo(coordinate: CLLocationCoordinate2D, maxDistance: Double = 10.0) -> Campsite? {
+        let campsitesWithEmergencyInfo = getCampsitesWithEmergencyInfo()
+        
+        var nearestCampsite: Campsite?
+        var nearestDistance = maxDistance
+        
+        for campsite in campsitesWithEmergencyInfo {
+            let distance = calculateDistance(from: coordinate, to: campsite.location)
+            if distance <= nearestDistance {
+                nearestDistance = distance
+                nearestCampsite = campsite
+            }
+        }
+        
+        return nearestCampsite
+    }
+    
     func getCampsitesByAccessibilityFeatures() -> [Campsite] {
         return campsites.filter { $0.isAccessible == true }
     }
